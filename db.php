@@ -45,8 +45,7 @@ function get_goal(PDO $pdo)
 function get_total_collected(PDO $pdo)
 {
     $stmt = $pdo->query('SELECT COALESCE(SUM(amount),0) AS total FROM donations');
-    $row = $stmt->fetch();
-    return (float)($row['total'] ?? 0);
+    return (float)($stmt->fetch()['total'] ?? 0);
 }
 
 function require_admin_login()
@@ -55,4 +54,9 @@ function require_admin_login()
         header('Location: login.php');
         exit;
     }
+}
+
+function app_theme_class()
+{
+    return !empty($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark' : '';
 }

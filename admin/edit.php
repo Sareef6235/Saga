@@ -1,7 +1,10 @@
 <?php
 require_once __DIR__ . '/../db.php';
 require_admin_login();
-if (!($pdo instanceof PDO)) { die('DB error'); }
+
+if (!($pdo instanceof PDO)) {
+    die('Database not configured');
+}
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,4 +24,24 @@ if ($id > 0) {
     $stmt->execute([':id' => $id]);
     $donation = $stmt->fetch();
 }
-?><!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Edit Donation</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-[#F1F5F9] p-4"><div class="max-w-lg mx-auto bg-white rounded-xl shadow p-5"><h1 class="text-xl font-bold text-emerald-700 mb-4">Edit Donation Amount</h1><?php if($donation): ?><form method="post" class="space-y-3"><input type="hidden" name="id" value="<?= $donation['id'] ?>"><p><b><?= h($donation['name']) ?></b> - <?= h($donation['organization']) ?></p><input class="w-full border rounded p-2" type="number" step="0.01" min="1" name="amount" value="<?= h($donation['amount']) ?>" required><button class="bg-emerald-600 text-white px-4 py-2 rounded">Save</button><a class="ml-2" href="dashboard.php">Cancel</a></form><?php else: ?><p>Donation not found.</p><a href="dashboard.php">Back</a><?php endif; ?></div></body></html>
+$themeClass = app_theme_class();
+?>
+<!doctype html>
+<html lang="en" class="<?= h($themeClass) ?>"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Edit Donation</title><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head>
+<body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4">
+<div class="max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-xl shadow p-5">
+    <div class="flex justify-between items-center"><h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Edit Donation Amount</h1><button id="themeToggle">🌓</button></div>
+    <?php if ($donation): ?>
+        <form method="post" class="space-y-3 mt-3">
+            <input type="hidden" name="id" value="<?= $donation['id'] ?>">
+            <p><b><?= h($donation['name']) ?></b> - <?= h($donation['organization']) ?></p>
+            <input class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 rounded p-2" type="number" step="0.01" min="1" name="amount" value="<?= h($donation['amount']) ?>" required>
+            <button class="bg-emerald-600 text-white px-4 py-2 rounded">Save</button>
+            <a class="ml-2" href="dashboard.php">Cancel</a>
+        </form>
+    <?php else: ?>
+        <p class="mt-3">Donation not found.</p><a href="dashboard.php">Back</a>
+    <?php endif; ?>
+</div>
+<script>document.getElementById('themeToggle').addEventListener('click',()=>{document.documentElement.classList.toggle('dark');const d=document.documentElement.classList.contains('dark');document.cookie=`theme=${d?'dark':'light'}; path=/; max-age=31536000`;});</script>
+</body></html>
