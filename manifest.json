@@ -1,0 +1,9 @@
+{
+  "name": "Mosque Madrasa Fund Tracker",
+  "short_name": "FundTracker",
+  "start_url": "index.php",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#059669",
+  "icons": []
+}
