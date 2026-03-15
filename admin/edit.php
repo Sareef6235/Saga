@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../includes/ui.php';
 require_admin_login();
 
 if (!($pdo instanceof PDO)) {
@@ -29,6 +30,7 @@ $themeClass = app_theme_class();
 <!doctype html>
 <html lang="en" class="<?= h($themeClass) ?>"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Edit Donation</title><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head>
 <body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4">
+<?php render_site_header('Edit Donation', 'Update Amount'); ?>
 <div class="max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-xl shadow p-5">
     <div class="flex justify-between items-center"><h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Edit Donation Amount</h1><button id="themeToggle">🌓</button></div>
     <?php if ($donation): ?>

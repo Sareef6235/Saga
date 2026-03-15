@@ -1,7 +1,9 @@
-<?php require_once __DIR__ . '/db.php'; $themeClass = app_theme_class(); ?>
+<?php require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/ui.php'; $themeClass = app_theme_class(); ?>
 <!doctype html>
 <html lang="ml" class="<?= h($themeClass) ?>"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profile</title><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head>
 <body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen pb-24">
+<?php render_site_header('Profile', 'Campaign Information'); ?>
 <main class="max-w-3xl mx-auto p-4 space-y-4">
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-5"><div class="flex justify-between"><h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">👤 Campaign Profile</h1><button id="themeToggle">🌓</button></div><p class="text-sm mt-2">Support the Dars initiative and track live ranking progress. This app supports PWA installation and offline shell loading.</p></div>
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-5"><h2 class="font-semibold text-emerald-700 dark:text-emerald-400">Quick Links</h2><div class="mt-3 grid md:grid-cols-2 gap-2"><a href="donate.php" class="p-3 rounded-xl bg-emerald-600 text-white text-center">Make a Contribution</a><a href="admin/login.php" class="p-3 rounded-xl bg-slate-800 text-white text-center">Admin Login</a></div></div>

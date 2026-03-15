@@ -35,6 +35,25 @@ function format_amount($amount)
     return '₹' . number_format((float)$amount, 2);
 }
 
+
+function get_setting(PDO $pdo, $key, $default = '')
+{
+    $stmt = $pdo->prepare('SELECT setting_value FROM settings WHERE setting_key=:key LIMIT 1');
+    $stmt->execute([':key' => $key]);
+    $row = $stmt->fetch();
+    return $row ? (string)$row['setting_value'] : (string)$default;
+}
+
+function site_logo_url($pdo = null)
+{
+    $default = '/1.jpeg';
+    if ($pdo instanceof PDO) {
+        $value = get_setting($pdo, 'site_logo_url', $default);
+        return $value !== '' ? $value : $default;
+    }
+    return $default;
+}
+
 function get_goal(PDO $pdo)
 {
     $stmt = $pdo->query("SELECT setting_value FROM settings WHERE setting_key='fundraising_goal' LIMIT 1");

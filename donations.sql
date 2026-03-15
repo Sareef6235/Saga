@@ -35,6 +35,10 @@ INSERT INTO `settings` (`setting_key`, `setting_value`)
 VALUES ('fundraising_goal', '1000000.00')
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
 
+INSERT INTO `settings` (`setting_key`, `setting_value`)
+VALUES ('site_logo_url', '/1.jpeg')
+ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
+
 -- Default admin login: admin / admin123 (change immediately after first login)
 INSERT INTO `admin_users` (`username`, `password`)
 VALUES ('admin', '$2y$12$OIdriQO2zkHmQQ5j9SU.VeuZRa9zv2KyQPLQu4F1WYhz2XRSCNjEG')

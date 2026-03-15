@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/ui.php';
 $donors = [];
 if ($pdo instanceof PDO) {
     $stmt = $pdo->query('SELECT name, organization, amount, created_at FROM donations ORDER BY amount DESC, created_at ASC');
@@ -10,6 +11,7 @@ $themeClass = app_theme_class();
 <!doctype html>
 <html lang="ml" class="<?= h($themeClass) ?>"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Leaderboard</title><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head>
 <body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 pb-24">
+<?php render_site_header('Leaderboard', 'Live Donor Ranking'); ?>
 <main class="max-w-4xl mx-auto p-4 space-y-4">
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-4"><div class="flex justify-between"><h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">🏆 Full Leaderboard</h1><button id="themeToggle">🌓</button></div><p class="text-xs text-slate-500 dark:text-slate-400">Auto updates every 5 seconds</p></div>
 <div id="leaderboardCards" class="grid gap-2">

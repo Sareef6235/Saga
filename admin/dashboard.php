@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../includes/ui.php';
 require_admin_login();
 
 if (isset($_GET['logout'])) {
@@ -30,6 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_goal']) && $pd
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_logo']) && $pdo instanceof PDO) {
+    $logoUrl = trim($_POST['logo_url'] ?? '');
+    if ($logoUrl !== '') {
+        $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('site_logo_url', :v) ON DUPLICATE KEY UPDATE setting_value=:v");
+        $stmt->execute([':v' => $logoUrl]);
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_selected']) && $pdo instanceof PDO) {
     $ids = array_filter($_POST['donation_ids'] ?? [], 'is_numeric');
     if ($ids) {
@@ -48,6 +57,7 @@ $totalContributors = 0;
 $topDonor = '-';
 $goal = 1000000;
 $rows = [];
+$logoUrl = site_logo_url($pdo instanceof PDO ? $pdo : null);
 
 if ($pdo instanceof PDO) {
     $totalDonations = get_total_collected($pdo);
@@ -68,6 +78,7 @@ $themeClass = app_theme_class();
 <script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script>
 </head>
 <body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4 pb-28">
+<?php render_site_header('Admin Dashboard', 'Donation Management Panel'); ?>
 <div class="max-w-6xl mx-auto space-y-4">
     <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow flex justify-between items-center">
         <h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Admin Dashboard</h1>
@@ -87,6 +98,11 @@ $themeClass = app_theme_class();
                 <input class="border dark:border-slate-700 bg-white dark:bg-slate-800 rounded p-2" name="goal_amount" type="number" step="0.01" min="1" value="<?= h($goal) ?>">
             </div>
             <button name="update_goal" class="bg-emerald-600 text-white px-4 py-2 rounded">Update Goal</button>
+            <div>
+                <label class="text-sm">Logo URL</label>
+                <input class="border dark:border-slate-700 bg-white dark:bg-slate-800 rounded p-2" name="logo_url" type="text" value="<?= h($logoUrl) ?>" placeholder="/1.jpeg or https://...">
+            </div>
+            <button name="update_logo" class="bg-slate-700 text-white px-4 py-2 rounded">Update Logo</button>
             <a href="dashboard.php?export=1" class="bg-amber-600 text-white px-4 py-2 rounded">Export CSV</a>
         </form>
     </div>

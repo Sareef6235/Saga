@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../includes/ui.php';
 
 if (!empty($_SESSION['admin_id'])) {
     header('Location: dashboard.php');
@@ -31,8 +32,10 @@ $themeClass = app_theme_class();
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Login</title>
 <script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script>
 </head>
-<body class="bg-[#F1F5F9] dark:bg-slate-950 min-h-screen flex items-center justify-center p-4 text-slate-800 dark:text-slate-100">
-<form method="post" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-3">
+<body class="bg-[#F1F5F9] dark:bg-slate-950 min-h-screen p-4 text-slate-800 dark:text-slate-100">
+<?php render_site_header('Admin Login', 'Secure Dashboard Access'); ?>
+<main class="max-w-sm mx-auto">
+<form method="post" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full p-6 space-y-3">
     <div class="flex justify-between items-center"><h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Admin Login</h1><button type="button" id="themeToggle">🌓</button></div>
     <?php if ($error): ?><p class="text-red-600 text-sm"><?= h($error) ?></p><?php endif; ?>
     <input class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 p-3 rounded-lg" name="username" placeholder="Username" required>
@@ -40,6 +43,7 @@ $themeClass = app_theme_class();
     <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg">Login</button>
     <p class="text-xs text-slate-500">Default: admin / admin123</p>
 </form>
+</main>
 <footer class="max-w-lg mx-auto mt-4 text-center text-sm text-slate-600 dark:text-slate-300">
     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-4">
         <p>കായകുളം ദർസ് സംഭാവന ക്യാമ്പെയ്ൻ | Contact: +91 6235 989 198</p>

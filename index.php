@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/ui.php';
 
 $donors = [];
 $topDonors = [];
@@ -64,17 +65,9 @@ $themeClass = app_theme_class();
     </style>
 </head>
 <body class="bg-bgsoft dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen pb-28 transition-colors duration-300">
-<header class="islamic-pattern bg-gradient-to-r from-emerald-700 to-brand text-white shadow-soft rounded-b-3xl">
-    <div class="max-w-5xl mx-auto px-4 py-7">
-        <div class="flex justify-between items-center gap-2">
-            <div>
-                <h1 class="text-2xl md:text-4xl font-bold">കായകുളം ദർസിലേക്ക് ഒരു സംഭാവന</h1>
-                <p class="text-emerald-100 mt-1 text-sm">Kayamkulam Dars Contribution</p>
-            </div>
-            <button id="themeToggle" class="bg-white/15 hover:bg-white/25 px-3 py-2 rounded-xl text-sm">🌓</button>
-        </div>
-    </div>
-</header>
+
+
+<?php render_site_header('കായകുളം ദർസിലേക്ക് ഒരു സംഭാവന', 'Kayamkulam Dars Contribution'); ?>
 
 <main class="max-w-5xl mx-auto px-4 -mt-3 space-y-5">
     <?php if (!empty($dbError)): ?><div class="bg-red-100 border border-red-200 text-red-700 rounded-xl p-3 text-sm"><?= h($dbError) ?></div><?php endif; ?>
@@ -155,12 +148,6 @@ $themeClass = app_theme_class();
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
 }
-
-document.getElementById('themeToggle').addEventListener('click', () => {
-    document.documentElement.classList.toggle('dark');
-    const isDark = document.documentElement.classList.contains('dark');
-    document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000`;
-});
 
 async function refreshLeaderboard() {
     const res = await fetch('ajax/leaderboard.php');

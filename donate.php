@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/ui.php';
 $errors = [];
 $old = ['name' => '', 'organization' => '', 'phone' => '', 'amount' => ''];
 
@@ -38,6 +39,7 @@ $themeClass = app_theme_class();
     <script>tailwind.config={darkMode:'class'}</script>
 </head>
 <body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen pb-24">
+<?php render_site_header('സംഭാവന ചേർക്കുക', 'Add Contribution'); ?>
 <main class="max-w-xl mx-auto p-4 space-y-4">
     <div class="bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between">
