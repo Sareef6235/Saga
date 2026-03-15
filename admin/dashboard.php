@@ -48,10 +48,6 @@ $totalContributors = 0;
 $topDonor = '-';
 $goal = 1000000;
 $rows = [];
-$dailyLabels = [];
-$dailyValues = [];
-$topLabels = [];
-$topValues = [];
 
 if ($pdo instanceof PDO) {
     $totalDonations = get_total_collected($pdo);
@@ -63,27 +59,15 @@ if ($pdo instanceof PDO) {
     }
     $goal = get_goal($pdo);
     $rows = $pdo->query('SELECT id, name, organization, phone, amount, created_at FROM donations ORDER BY amount DESC, created_at ASC')->fetchAll();
-
-    $dailyRows = $pdo->query("SELECT DATE(created_at) AS d, SUM(amount) AS t FROM donations GROUP BY DATE(created_at) ORDER BY DATE(created_at) ASC")->fetchAll();
-    foreach ($dailyRows as $d) {
-        $dailyLabels[] = $d['d'];
-        $dailyValues[] = (float)$d['t'];
-    }
-
-    $topDonorsRows = $pdo->query('SELECT name, amount FROM donations ORDER BY amount DESC LIMIT 5')->fetchAll();
-    foreach ($topDonorsRows as $t) {
-        $topLabels[] = $t['name'];
-        $topValues[] = (float)$t['amount'];
-    }
 }
 $themeClass = app_theme_class();
 ?>
 <!doctype html>
 <html lang="en" class="<?= h($themeClass) ?>"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Dashboard</title>
-<script src="https://cdn.tailwindcss.com"></script><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script>tailwind.config={darkMode:'class'}</script>
+<script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script>
 </head>
-<body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4">
+<body class="bg-[#F1F5F9] dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4 pb-28">
 <div class="max-w-6xl mx-auto space-y-4">
     <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow flex justify-between items-center">
         <h1 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Admin Dashboard</h1>
@@ -105,11 +89,6 @@ $themeClass = app_theme_class();
             <button name="update_goal" class="bg-emerald-600 text-white px-4 py-2 rounded">Update Goal</button>
             <a href="dashboard.php?export=1" class="bg-amber-600 text-white px-4 py-2 rounded">Export CSV</a>
         </form>
-    </div>
-
-    <div class="grid lg:grid-cols-2 gap-4">
-        <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow"><h2 class="font-semibold mb-3">Donation Growth (Daily)</h2><canvas id="dailyChart" height="140"></canvas></div>
-        <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow"><h2 class="font-semibold mb-3">Top Donors</h2><canvas id="topChart" height="140"></canvas></div>
     </div>
 
     <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow overflow-x-auto">
@@ -154,26 +133,17 @@ $themeClass = app_theme_class();
     </div>
 </div>
 
+<footer class="max-w-6xl mx-auto mt-4 text-center text-sm text-slate-600 dark:text-slate-300">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-4">
+        <p>കായകുളം ദർസ് സംഭാവന ക്യാമ്പെയ്ൻ | Contact: +91 6235 989 198</p>
+        <p class="meta mt-1">© 2026 All Rights Reserved | Design by <a class="text-brand font-medium" href="https://mmhnu.online/" target="_blank" rel="noopener noreferrer">Muhsin Faizy</a></p>
+    </div>
+</footer>
+
 <script>
 document.getElementById('selectAll').addEventListener('change', function () {
     document.querySelectorAll('input[name="donation_ids[]"]').forEach(cb => cb.checked = this.checked);
 });
-
 document.getElementById('themeToggle').addEventListener('click',()=>{document.documentElement.classList.toggle('dark');const d=document.documentElement.classList.contains('dark');document.cookie=`theme=${d?'dark':'light'}; path=/; max-age=31536000`;});
-
-const dailyLabels = <?= json_encode($dailyLabels) ?>;
-const dailyValues = <?= json_encode($dailyValues) ?>;
-const topLabels = <?= json_encode($topLabels) ?>;
-const topValues = <?= json_encode($topValues) ?>;
-
-new Chart(document.getElementById('dailyChart'), {
-    type: 'line',
-    data: { labels: dailyLabels, datasets: [{ label: 'Daily Donations', data: dailyValues, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.15)', tension: 0.3, fill: true }] },
-});
-
-new Chart(document.getElementById('topChart'), {
-    type: 'bar',
-    data: { labels: topLabels, datasets: [{ label: 'Top Donors', data: topValues, backgroundColor: '#D4A017' }] },
-});
 </script>
 </body></html>

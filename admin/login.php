@@ -40,5 +40,12 @@ $themeClass = app_theme_class();
     <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg">Login</button>
     <p class="text-xs text-slate-500">Default: admin / admin123</p>
 </form>
+<footer class="max-w-lg mx-auto mt-4 text-center text-sm text-slate-600 dark:text-slate-300">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-4">
+        <p>കായകുളം ദർസ് സംഭാവന ക്യാമ്പെയ്ൻ | Contact: +91 6235 989 198</p>
+        <p class="meta mt-1">© 2026 All Rights Reserved | Design by <a class="text-brand font-medium" href="https://mmhnu.online/" target="_blank" rel="noopener noreferrer">Muhsin Faizy</a></p>
+    </div>
+</footer>
+
 <script>document.getElementById('themeToggle').addEventListener('click',()=>{document.documentElement.classList.toggle('dark');const d=document.documentElement.classList.contains('dark');document.cookie=`theme=${d?'dark':'light'}; path=/; max-age=31536000`;});</script>
 </body></html>

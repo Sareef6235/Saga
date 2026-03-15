@@ -68,6 +68,13 @@ $themeClass = app_theme_class();
     </div>
 </main>
 
+<footer class="max-w-xl mx-auto px-4 pb-4 text-center text-sm text-slate-600 dark:text-slate-300">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow p-4">
+        <p>കായകുളം ദർസ് സംഭാവന ക്യാമ്പെയ്ൻ | Contact: +91 6235 989 198</p>
+        <p class="meta mt-1">© 2026 All Rights Reserved | Design by <a class="text-brand font-medium" href="https://mmhnu.online/" target="_blank" rel="noopener noreferrer">Muhsin Faizy</a></p>
+    </div>
+</footer>
+
 <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t dark:border-slate-700"><div class="max-w-xl mx-auto grid grid-cols-4 text-center text-xs"><a class="py-3" href="index.php">🏠<br>Home</a><a class="py-3 text-emerald-700 font-semibold" href="donate.php">💰<br>Donate</a><a class="py-3" href="leaderboard.php">🏆<br>Leaderboard</a><a class="py-3" href="profile.php">👤<br>Profile</a></div></nav>
 
 <script>

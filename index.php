@@ -7,6 +7,10 @@ $goal = 1000000;
 $totalCollected = 0;
 $progressPercent = 0;
 $remainingAmount = $goal;
+$dailyLabels = [];
+$dailyValues = [];
+$topLabels = [];
+$topValues = [];
 
 if ($pdo instanceof PDO) {
     $stmt = $pdo->query('SELECT id, name, organization, amount, created_at FROM donations ORDER BY amount DESC, created_at ASC');
@@ -16,6 +20,18 @@ if ($pdo instanceof PDO) {
     $totalCollected = get_total_collected($pdo);
     $remainingAmount = max(0, $goal - $totalCollected);
     $progressPercent = $goal > 0 ? min(100, ($totalCollected / $goal) * 100) : 0;
+
+    $dailyRows = $pdo->query("SELECT DATE(created_at) AS d, SUM(amount) AS t FROM donations GROUP BY DATE(created_at) ORDER BY DATE(created_at) ASC")->fetchAll();
+    foreach ($dailyRows as $d) {
+        $dailyLabels[] = $d['d'];
+        $dailyValues[] = (float)$d['t'];
+    }
+
+    $topDonorRows = $pdo->query('SELECT name, amount FROM donations ORDER BY amount DESC LIMIT 5')->fetchAll();
+    foreach ($topDonorRows as $row) {
+        $topLabels[] = $row['name'];
+        $topValues[] = (float)$row['amount'];
+    }
 }
 
 $successMessage = isset($_GET['success']) ? 'സംഭാവന വിജയകരമായി ചേർത്തിരിക്കുന്നു.' : '';
@@ -31,6 +47,7 @@ $themeClass = app_theme_class();
     <link rel="manifest" href="manifest.json">
     <title>കായകുളം ദർസിലേക്ക് ഒരു സംഭാവന</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -46,7 +63,7 @@ $themeClass = app_theme_class();
         .islamic-pattern{background-image:radial-gradient(circle at 1px 1px,rgba(212,160,23,.24) 1px,transparent 0);background-size:24px 24px;}
     </style>
 </head>
-<body class="bg-bgsoft dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen pb-24 transition-colors duration-300">
+<body class="bg-bgsoft dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen pb-28 transition-colors duration-300">
 <header class="islamic-pattern bg-gradient-to-r from-emerald-700 to-brand text-white shadow-soft rounded-b-3xl">
     <div class="max-w-5xl mx-auto px-4 py-7">
         <div class="flex justify-between items-center gap-2">
@@ -92,6 +109,11 @@ $themeClass = app_theme_class();
         </div>
     </section>
 
+    <section class="grid lg:grid-cols-2 gap-4">
+        <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-soft"><h2 class="font-semibold mb-3">Donation Growth (Daily)</h2><canvas id="dailyChart" height="225"></canvas></div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-soft"><h2 class="font-semibold mb-3">Top Donors</h2><canvas id="topChart" height="225"></canvas></div>
+    </section>
+
     <section class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-soft">
         <div class="flex items-center justify-between mb-4">
             <h2 class="font-bold text-lg text-emerald-700 dark:text-emerald-400">All Contributors</h2>
@@ -112,6 +134,13 @@ $themeClass = app_theme_class();
         </div>
     </section>
 </main>
+
+<footer class="max-w-5xl mx-auto px-4 py-6 text-center text-sm text-slate-600 dark:text-slate-300">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-soft p-4">
+        <p>കായകുളം ദർസ് സംഭാവന ക്യാമ്പെയ്ൻ | Contact: +91 6235 989 198</p>
+        <p class="meta mt-1">© 2026 All Rights Reserved | Design by <a class="text-brand font-medium" href="https://mmhnu.online/" target="_blank" rel="noopener noreferrer">Muhsin Faizy</a></p>
+    </div>
+</footer>
 
 <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t dark:border-slate-700 shadow-[0_-4px_20px_rgba(0,0,0,.08)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 text-center text-xs">
@@ -153,6 +182,13 @@ async function refreshProgress() {
 }
 setInterval(() => { refreshLeaderboard(); refreshProgress(); }, 5000);
 setTimeout(() => { const banner = document.getElementById('successBanner'); if (banner) banner.remove(); }, 3500);
+
+const dailyLabels = <?= json_encode($dailyLabels) ?>;
+const dailyValues = <?= json_encode($dailyValues) ?>;
+const topLabels = <?= json_encode($topLabels) ?>;
+const topValues = <?= json_encode($topValues) ?>;
+new Chart(document.getElementById('dailyChart'), {type:'line',data:{labels:dailyLabels,datasets:[{label:'Daily Donations',data:dailyValues,borderColor:'#059669',backgroundColor:'rgba(5,150,105,.14)',fill:true,tension:.3}]}});
+new Chart(document.getElementById('topChart'), {type:'bar',data:{labels:topLabels,datasets:[{label:'Top Donors',data:topValues,backgroundColor:'#D4A017'}]}});
 </script>
 </body>
 </html>
